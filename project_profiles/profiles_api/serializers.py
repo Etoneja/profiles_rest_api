@@ -27,6 +27,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
             name=validated_data["name"],
             password=validated_data["password"]
         )
+        user.set_password(user.password)
         user.save()
         return user
 
+
+class ProfileFeedSerializer(serializers.ModelSerializer):
+
+    username = serializers.CharField(source='user_profile.name')
+
+    class Meta:
+
+        model = models.ProfileFeedItem
+        fields = (
+            "id", "user_profile",
+            "status_text", "created_on", "username"
+        )
+        read_only_fields = ["user_profile"]

@@ -6,7 +6,7 @@ from django.contrib.auth.models import PermissionsMixin
 
 class UserProfileManager(BaseUserManager):
 
-    def create(self, email, name, password=None):
+    def create(self, email, name, password):
 
         if not email:
             raise ValueError("Users must have an email address")
@@ -50,3 +50,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return f"{self.name} - {self.email}"
 
+
+class ProfileFeedItem(models.Model):
+
+    user_profile = models.ForeignKey(
+        "UserProfile", on_delete=models.CASCADE
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_profile} {self.status_text}"
